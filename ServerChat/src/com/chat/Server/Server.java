@@ -1,9 +1,9 @@
 package com.chat.Server;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.HashSet;
 import java.util.Set;
 
 public class Server {
@@ -12,10 +12,10 @@ public class Server {
 	private int port;
 	private Socket socket;
 	private ServerSocket server;
-	private PrintWriter writer;
 
 	public Server(int port) {
-		super();
+		this.userNameSet = new HashSet<String>();
+		this.userThreadSet = new HashSet<UserThread>();
 		this.port = port;
 	}
 
@@ -67,20 +67,11 @@ public class Server {
 		this.userNameSet.add(userName);
 	}
 
-	public void getCurrentUser() {
-		if (existedUser()) {
-			writer.println("Current User(s): " + this.userNameSet.toString());
-		} else {
-			writer.println("No one on the Server!");
-		}
-	}
-
 	public void removeUser(String userName, UserThread userThread) {
 		boolean removeName = this.userNameSet.remove(userName);
 		if (removeName) {
 			this.userThreadSet.remove(userThread);
 			System.out.println("The user: " + userName + " quitted!");
-			getCurrentUser();
 
 		}
 	}
@@ -90,26 +81,27 @@ public class Server {
 			if (p != currentUser) {
 				p.sendMessage(message);
 			} else {
-				p.sendMessage("No one on system!");
+				p.sendMessage("--->{" + message + "}");
 			}
 		});
 	}
 
 	public void operate() {
 		try {
+			server = new ServerSocket(this.port);
 			while (true) {
-				server = new ServerSocket(this.port);
+
 				this.socket = server.accept();
-				UserThread userConnect = new UserThread(socket,this);
-				System.out.println("User "+userConnect.getUserName()+" connected to Server");
+				UserThread userConnect = new UserThread(socket, this);
+				System.out.println("User(s) " + this.userNameSet.toString() + " connected to Server");
 				this.userThreadSet.add(userConnect);
 				userConnect.start();
 			}
 
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 	}
-	
+
 }

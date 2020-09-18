@@ -55,7 +55,7 @@ public class UserThread extends Thread {
 		try {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
 			this.writer = new PrintWriter(this.socket.getOutputStream(), true);
-			chatServer.getCurrentUser();
+			getCurrentUser();
 
 			userName = reader.readLine();
 			this.chatServer.addUserName(userName);
@@ -65,14 +65,15 @@ public class UserThread extends Thread {
 			do {
 				messageUser = reader.readLine();
 				String messageServer = "[" + userName + "]: " + messageUser;
-				this.chatServer.broadcastToUser(messageServer, this);
-				if (messageUser.equalsIgnoreCase("ls -a")) {
-					chatServer.getCurrentUser();
+				if (messageUser.equalsIgnoreCase("ls")) {
+					getCurrentUser();
 				}
+				this.chatServer.broadcastToUser(messageServer, this);
 
+				writer.flush();
 			} while (!messageUser.equalsIgnoreCase("bye"));
 
-			chatServer.broadcastToUser("The user " + userName + "was out! ", this);
+			chatServer.broadcastToUser("The user " + userName + " was out! ", this);
 			chatServer.removeUser(userName, this);
 			this.socket.close();
 		} catch (IOException e) {
@@ -83,5 +84,13 @@ public class UserThread extends Thread {
 
 	public void sendMessage(String message) {
 		this.writer.println(message);
+	}
+
+	public void getCurrentUser() {
+		if (chatServer.existedUser()) {
+			writer.println("Current User(s): " + chatServer.getUserNameSet().toString());
+		} else {
+			writer.println("No one on the Server!");
+		}
 	}
 }
