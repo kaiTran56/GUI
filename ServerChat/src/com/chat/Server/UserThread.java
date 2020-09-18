@@ -53,10 +53,11 @@ public class UserThread extends Thread {
 	@Override
 	public void run() {
 		try {
+			
 			BufferedReader reader = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
+			
 			this.writer = new PrintWriter(this.socket.getOutputStream(), true);
 			getCurrentUser();
-
 			userName = reader.readLine();
 			this.chatServer.addUserName(userName);
 			this.chatServer.broadcastToUser("New User connected! " + userName, this);

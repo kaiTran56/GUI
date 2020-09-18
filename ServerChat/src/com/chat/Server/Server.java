@@ -93,7 +93,7 @@ public class Server {
 
 				this.socket = server.accept();
 				UserThread userConnect = new UserThread(socket, this);
-				System.out.println("User(s) " + this.userNameSet.toString() + " connected to Server");
+				System.out.println("New user connected to Server");
 				this.userThreadSet.add(userConnect);
 				userConnect.start();
 			}
