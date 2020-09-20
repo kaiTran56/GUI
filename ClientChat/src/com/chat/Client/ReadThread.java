@@ -31,10 +31,9 @@ public class ReadThread extends Thread {
 				String message = reader.readLine();
 				System.out.println(message);
 			} catch (IOException e) {
-				System.out.println("[Server]: Good bye, "+this.client.getUserName()+"and see you!");
+				System.out.println("[Server]: Good bye, "+this.client.getUserName()+" and see you!");
 				break;
 			}
 		}
 	}
-
 }
