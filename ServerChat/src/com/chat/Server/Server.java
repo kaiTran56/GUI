@@ -72,7 +72,7 @@ public class Server {
 		if (removeName) {
 			this.userThreadSet.remove(userThread);
 			System.out.println("The user: " + userName + " quitted!");
-
+			System.out.println("Current User(s): "+this.getUserNameSet().toString());
 		}
 	}
 
