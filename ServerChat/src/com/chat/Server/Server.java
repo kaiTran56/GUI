@@ -5,7 +5,19 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashSet;
 import java.util.Set;
-
+/*
+ * The main function of Server: accept all the connection from the client and resend the message to  them
+ * The functions in Server: 
+ * 1, List all the user in system
+ * 2, Send the message from client to each others
+ * 3, Disconnect to the clients
+ * 
+ * <!> Notice: the best vital method is broadcastToUser() which uses to receive and retrieve the messages to clients
+ * 
+ * @author: TranQuyet 
+ * 
+ * 
+ */
 public class Server {
 	private Set<String> userNameSet;
 	private Set<UserThread> userThreadSet;
