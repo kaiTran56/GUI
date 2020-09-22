@@ -1,6 +1,7 @@
 package com.myideas.dao.implement;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -17,7 +18,7 @@ public class BookDao extends JDBCConnection implements Dao<Book> {
 
 	@Override
 	public void insert(Book t) {
-		
+
 	}
 
 	@Override
@@ -27,7 +28,7 @@ public class BookDao extends JDBCConnection implements Dao<Book> {
 
 	@Override
 	public void delete(int id) {
-		
+
 	}
 
 	@Override
@@ -51,6 +52,8 @@ public class BookDao extends JDBCConnection implements Dao<Book> {
 				Book book = new Book(id, name, author, content);
 				listBook.add(book);
 			}
+			statement.close();
+			result.close();
 			super.getDisconnectionJDBC(this.connect);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -61,14 +64,52 @@ public class BookDao extends JDBCConnection implements Dao<Book> {
 
 	@Override
 	public List<Book> searchByName(String name) {
-		
-		return null;
+		List<Book> listBook = new ArrayList<Book>();
+		connect = super.getConnectionJDBC();
+		String sql = "select b.id, b.name, b.author, c.content from book b inner join contentbook c where b.name like ?";
+		try {
+			PreparedStatement statement = this.connect.prepareStatement(sql);
+			statement.setString(1, name);
+			ResultSet result = statement.executeQuery();
+			while (result.next()) {
+				int id = result.getInt("id");
+				String nameBook = result.getString("name");
+				String author = result.getString("author");
+				String content = result.getString("content");
+				listBook.add(new Book(id, nameBook, author, content));
+			}
+			statement.close();
+			result.close();
+			super.getDisconnectionJDBC(connect);
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return listBook;
 	}
 
 	@Override
 	public List<Book> searchByAuhtor(String author) {
-		// TODO Auto-generated method stub
-		return null;
+		List<Book> listBook = new ArrayList<Book>();
+		connect = super.getConnectionJDBC();
+		String sql = "select b.id, b.name, b.author, c.content from book b inner join contentbook c where b.author like ?";
+		try {
+			PreparedStatement statement = connect.prepareStatement(sql);
+			statement.setString(1, author);
+			ResultSet result = statement.executeQuery();
+			while (result.next()) {
+				listBook.add(new Book(result.getInt("id"), result.getString("name"), result.getString("author"),
+						result.getString("content")));
+			}
+			statement.close();
+			result.close();
+			super.getDisconnectionJDBC(connect);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return listBook;
 	}
 
 }
