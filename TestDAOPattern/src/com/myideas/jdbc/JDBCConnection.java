@@ -18,7 +18,8 @@ public class JDBCConnection {
 			String user = properties.getProperty("user");
 			String password = properties.getProperty("password");
 			String url = properties.getProperty("url");
-			Class.forName("com.mysql.jdbc.Driver");
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			System.out.println("Connection successd!");
 			return DriverManager.getConnection(url, user, password);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -36,6 +37,7 @@ public class JDBCConnection {
 	public void getDisconnectionJDBC(Connection connection) {
 		try {
 			if (this.connection != null || connection.isClosed()) {
+				System.out.println("Disconnect ...!");
 				connection.close();
 			}
 		} catch (SQLException e) {
@@ -43,4 +45,10 @@ public class JDBCConnection {
 			e.printStackTrace();
 		}
 	}
+
+	/*
+	 * public static void main(String[] args) { JDBCConnection jdbc = new
+	 * JDBCConnection(); System.out.println("Checking connection....");
+	 * jdbc.getConnectionJDBC(); }
+	 */
 }

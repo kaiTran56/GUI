@@ -4,12 +4,22 @@ public class Book {
 	private String name;
 	private int id;
 	private String author;
+	private String content;
 
-	public Book(String name, int id, String author) {
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
+
+	public Book(int id, String name, String author, String content) {
 		super();
 		this.name = name;
 		this.id = id;
 		this.author = author;
+		this.content = content;
 	}
 
 	public String getName() {
@@ -39,6 +49,6 @@ public class Book {
 	@Override
 	public String toString() {
 
-		return "ID: " + id + "\nName: " + name + "\nAuthor: " + author;
+		return "ID: " + id + "\nName: " + name + "\nAuthor: " + author + "\nContent: " + content;
 	}
 }
