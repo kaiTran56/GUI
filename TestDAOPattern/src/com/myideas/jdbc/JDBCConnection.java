@@ -33,18 +33,13 @@ public class JDBCConnection {
 		}
 		return null;
 	}
-
-	public void getDisconnectionJDBC(Connection connection) {
-		try {
-			if (this.connection != null || connection.isClosed()) {
-				System.out.println("Disconnect ...!");
-				connection.close();
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+	/*
+	 * public void getDisconnectionJDBC(Connection connection) { try { if
+	 * (this.connection != null || connection.isClosed()) {
+	 * System.out.println("Disconnection ...!"); connection.close(); } } catch
+	 * (SQLException e) { // TODO Auto-generated catch block e.printStackTrace(); }
+	 * }
+	 */
 
 	/*
 	 * public static void main(String[] args) { JDBCConnection jdbc = new

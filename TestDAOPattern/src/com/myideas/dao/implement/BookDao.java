@@ -54,7 +54,7 @@ public class BookDao extends JDBCConnection implements Dao<Book> {
 			}
 			statement.close();
 			result.close();
-			super.getDisconnectionJDBC(this.connect);
+			connect.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -66,7 +66,7 @@ public class BookDao extends JDBCConnection implements Dao<Book> {
 	public List<Book> searchByName(String name) {
 		List<Book> listBook = new ArrayList<Book>();
 		connect = super.getConnectionJDBC();
-		String sql = "select b.id, b.name, b.author, c.content from book b inner join contentbook c where b.name like ?";
+		String sql = "select b.id, b.name, b.author, c.content from book b inner join contentbook c on b.id = c.id_book where b.name like ?";
 		try {
 			PreparedStatement statement = this.connect.prepareStatement(sql);
 			statement.setString(1, name);
@@ -80,7 +80,7 @@ public class BookDao extends JDBCConnection implements Dao<Book> {
 			}
 			statement.close();
 			result.close();
-			super.getDisconnectionJDBC(connect);
+			connect.close();
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -93,7 +93,7 @@ public class BookDao extends JDBCConnection implements Dao<Book> {
 	public List<Book> searchByAuhtor(String author) {
 		List<Book> listBook = new ArrayList<Book>();
 		connect = super.getConnectionJDBC();
-		String sql = "select b.id, b.name, b.author, c.content from book b inner join contentbook c where b.author like ?";
+		String sql = "select b.id, b.name, b.author, c.content from book b inner join contentbook c on b.id = c.id_book where b.author like ?";
 		try {
 			PreparedStatement statement = connect.prepareStatement(sql);
 			statement.setString(1, author);
@@ -104,7 +104,7 @@ public class BookDao extends JDBCConnection implements Dao<Book> {
 			}
 			statement.close();
 			result.close();
-			super.getDisconnectionJDBC(connect);
+			connect.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
