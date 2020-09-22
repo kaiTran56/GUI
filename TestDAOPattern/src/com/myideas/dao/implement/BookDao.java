@@ -31,14 +31,15 @@ public class BookDao extends JDBCConnection implements Dao<Book> {
 
 	}
 
-	
-	/* The problem in this method stand in the action of reusing the getAll() method 
+	/*
+	 * The problem in this method stand in the action of reusing the getAll() method
 	 * and use stream() to solve the list collection
 	 * 
-	 * @result: just show only one content for id: 1 while this object at position have 2 sincrere content 
+	 * @result: just show only one content for id: 1 while this object at position
+	 * have 2 sincrere content
 	 * 
 	 * @solve: use query of MySql instead of reusing getAll() method
-	 */ 
+	 */
 	@Override
 	public Optional<Book> get(int id) {
 		return getAll().parallelStream().filter(p -> p.getId() == id).findFirst();
@@ -64,7 +65,6 @@ public class BookDao extends JDBCConnection implements Dao<Book> {
 			result.close();
 			connect.close();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return listBook;
@@ -91,7 +91,6 @@ public class BookDao extends JDBCConnection implements Dao<Book> {
 			connect.close();
 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return listBook;
@@ -114,7 +113,6 @@ public class BookDao extends JDBCConnection implements Dao<Book> {
 			result.close();
 			connect.close();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return listBook;
