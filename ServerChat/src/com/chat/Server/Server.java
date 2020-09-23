@@ -5,6 +5,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashSet;
 import java.util.Set;
+
 /*
  * The main function of Server: accept all the connection from the client and resend the message to  them
  * The functions in Server: 
@@ -84,7 +85,7 @@ public class Server {
 		if (removeName) {
 			this.userThreadSet.remove(userThread);
 			System.out.println("The user: " + userName + " quitted!");
-			System.out.println("Current User(s): "+this.getUserNameSet().toString());
+			System.out.println("Current User(s): " + this.getUserNameSet().toString());
 		}
 	}
 
@@ -114,6 +115,11 @@ public class Server {
 
 			e.printStackTrace();
 		}
+	}
+
+	public void getDiscontion() throws IOException {
+		this.server.close();
+		this.socket.close();
 	}
 
 }
