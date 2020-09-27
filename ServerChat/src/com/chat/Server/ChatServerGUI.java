@@ -1,10 +1,12 @@
 package com.chat.Server;
 
 import java.awt.Color;
-import java.io.IOException;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
+import javax.swing.JFrame;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
 /**
@@ -28,7 +30,7 @@ public class ChatServerGUI extends javax.swing.JFrame {
 
 	// <editor-fold defaultstate="collapsed" desc="Generated Code">
 	private void initComponents() {
-
+		this.frmServerMangement = new JFrame();
 		lblServer = new javax.swing.JLabel();
 		btnStart = new javax.swing.JButton();
 		btnStop = new javax.swing.JButton();
@@ -38,6 +40,8 @@ public class ChatServerGUI extends javax.swing.JFrame {
 		textPort = new javax.swing.JTextField();
 		lblLog = new javax.swing.JLabel();
 		txtMessage = new java.awt.TextArea();
+		
+		frmServerMangement.setTitle("Server Mangement");
 
 		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 		setBackground(new java.awt.Color(204, 204, 204));
@@ -50,25 +54,36 @@ public class ChatServerGUI extends javax.swing.JFrame {
 		btnStart.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
 		btnStart.setForeground(new java.awt.Color(51, 255, 51));
 		btnStart.setText("Start");
+		btnStart.addActionListener(new ActionListener() {
 
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+
+				try {
+					server = new Server(8080);
+					ChatServerGUI.updatedMessage("Start Server ....");
+					textPort.setText("Running...");
+					
+				} catch (Exception e2) {
+					ChatServerGUI.updatedMessage("Start Server Error!!!");
+					e2.printStackTrace();
+				}
+			}
+		});
+		frmServerMangement.getContentPane().add(btnStart);
+		
 		btnStop.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
 		btnStop.setForeground(new java.awt.Color(255, 51, 51));
 		btnStop.setText("Stop");
 		btnStop.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				try {
-					server.getDiscontion();
-					ChatServerGUI.updatedMessage("Stop Server!");
-					lblStatus.setText("<html><font color='red'>OFF</font></html>");
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-					ChatServerGUI.updatedMessage("Stop Server!");
-					lblStatus.setText("<html><font color='red'>OFF</font></html>");
-				}
+				ChatServerGUI.updatedMessage("Stop Server!");
+				textPort.setText("OFF");
 
 			}
 		});
+		frmServerMangement.getContentPane().add(btnStop);
 
 		lblPort.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
 		lblPort.setText("Port: ");
@@ -76,17 +91,12 @@ public class ChatServerGUI extends javax.swing.JFrame {
 		txtPort.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
 		txtPort.setText("8080");
 		txtPort.setEditable(false);
-		txtPort.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				txtPortActionPerformed(evt);
-			}
-		});
 
 		lblStatus.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
 		lblStatus.setText("Status: ");
 
 		textPort.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
-		textPort.setText("jTextField2");
+		textPort.setText("...............");
 
 		lblLog.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
 		lblLog.setText("Log");
@@ -95,6 +105,7 @@ public class ChatServerGUI extends javax.swing.JFrame {
 		txtMessage.setBackground(new java.awt.Color(0, 0, 0));
 		txtMessage.setForeground(new java.awt.Color(0, 255, 0));
 		txtMessage.setEditable(false);
+		frmServerMangement.getContentPane().add(txtMessage);
 
 		javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
 		layout.setHorizontalGroup(layout
@@ -110,7 +121,7 @@ public class ChatServerGUI extends javax.swing.JFrame {
 												.addGroup(layout.createSequentialGroup()
 														.addGroup(layout.createParallelGroup(Alignment.LEADING)
 																.addComponent(lblPort).addComponent(lblStatus))
-														.addPreferredGap(ComponentPlacement.RELATED)
+												.addPreferredGap(ComponentPlacement.RELATED)
 														.addGroup(layout.createParallelGroup(Alignment.LEADING)
 																.addComponent(textPort, GroupLayout.PREFERRED_SIZE,
 																		GroupLayout.DEFAULT_SIZE,
@@ -146,22 +157,11 @@ public class ChatServerGUI extends javax.swing.JFrame {
 		pack();
 	}// </editor-fold>
 
-	private void txtPortActionPerformed(java.awt.event.ActionEvent evt) {
-		// TODO add your handling code here:
-	}
-
 	/**
 	 * @param args the command line arguments
 	 */
 	public static void main(String args[]) {
-		/* Set the Nimbus look and feel */
-		// <editor-fold defaultstate="collapsed" desc=" Look and feel setting code
-		// (optional) ">
-		/*
-		 * If Nimbus (introduced in Java SE 6) is not available, stay with the default
-		 * look and feel. For details see
-		 * http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
-		 */
+
 		try {
 			for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
 				if ("Nimbus".equals(info.getName())) {
@@ -202,6 +202,7 @@ public class ChatServerGUI extends javax.swing.JFrame {
 	private javax.swing.JTextField textPort;
 	private static java.awt.TextArea txtMessage;
 	private javax.swing.JTextField txtPort;
+	private JFrame frmServerMangement;
 	// End of variables declaration
 	private Server server;
 

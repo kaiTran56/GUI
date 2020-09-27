@@ -30,6 +30,7 @@ public class Server {
 		this.userNameSet = new HashSet<String>();
 		this.userThreadSet = new HashSet<UserThread>();
 		this.port = port;
+		new UserThread(socket, this);
 	}
 
 	public Set<String> getUserNameSet() {
@@ -118,8 +119,9 @@ public class Server {
 	}
 
 	public void getDiscontion() throws IOException {
-		this.server.close();
 		this.socket.close();
+		this.server.close();
+		
 	}
 
 }
