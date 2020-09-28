@@ -10,9 +10,9 @@ import java.net.SocketAddress;
 import java.util.ArrayList;
 
 import com.tranquyet.data.User;
-import com.tranquyet.dictionary.Decode;
+import com.tranquyet.dictionary.Decryption;
 import com.tranquyet.dictionary.Dictionary;
-import com.tranquyet.dictionary.Encode;
+import com.tranquyet.dictionary.Encryption;
 
 public class Client {
 
@@ -34,7 +34,7 @@ public class Client {
 		IPserver = InetAddress.getByName(arg);
 		nameUser = name;
 		portClient = arg1;
-		userList = Decode.getAllUser(dataUser);
+		userList = Decryption.getAllUser(dataUser);
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -53,14 +53,14 @@ public class Client {
 		socketClient = new Socket();
 		SocketAddress addressServer = new InetSocketAddress(IPserver, portServer);
 		socketClient.connect(addressServer);
-		String msg = Encode.sendRequest(nameUser);
+		String message = Encryption.sendRequest(nameUser);
 		serverOutputStream = new ObjectOutputStream(socketClient.getOutputStream());
-		serverOutputStream.writeObject(msg);
+		serverOutputStream.writeObject(message);
 		serverOutputStream.flush();
 		serverInputStream = new ObjectInputStream(socketClient.getInputStream());
-		msg = (String) serverInputStream.readObject();
+		message = (String) serverInputStream.readObject();
 		serverInputStream.close();
-		userList = Decode.getAllUser(msg);
+		userList = Decryption.getAllUser(message);
 		new Thread(new Runnable() {
 
 			@Override
@@ -88,11 +88,11 @@ public class Client {
 	public void intialNewChat(String IP, int host, String guest) throws Exception {
 		final Socket connclient = new Socket(InetAddress.getByName(IP), host);
 		ObjectOutputStream sendrequestChat = new ObjectOutputStream(connclient.getOutputStream());
-		sendrequestChat.writeObject(Encode.sendRequestChat(nameUser));
+		sendrequestChat.writeObject(Encryption.sendRequestChat(nameUser));
 		sendrequestChat.flush();
 		ObjectInputStream receivedChat = new ObjectInputStream(connclient.getInputStream());
-		String msg = (String) receivedChat.readObject();
-		if (msg.equals(Dictionary.CHAT_DENY)) {
+		String message = (String) receivedChat.readObject();
+		if (message.equals(Dictionary.CHAT_DENY)) {
 			FriendTable.request("Your friend denied connect with you!", false);
 			connclient.close();
 			return;
@@ -106,7 +106,7 @@ public class Client {
 		socketClient = new Socket();
 		SocketAddress addressServer = new InetSocketAddress(IPserver, portServer);
 		socketClient.connect(addressServer);
-		String message = Encode.exit(nameUser);
+		String message = Encryption.exit(nameUser);
 		serverOutputStream = new ObjectOutputStream(socketClient.getOutputStream());
 		serverOutputStream.writeObject(message);
 		serverOutputStream.flush();

@@ -35,9 +35,9 @@ import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 
 import com.tranquyet.data.DataFile;
-import com.tranquyet.dictionary.Decode;
+import com.tranquyet.dictionary.Decryption;
 import com.tranquyet.dictionary.Dictionary;
-import com.tranquyet.dictionary.Encode;
+import com.tranquyet.dictionary.Encryption;
 
 
 public class ChatGui {
@@ -226,7 +226,7 @@ public class ChatGui {
 			public void actionPerformed(ActionEvent e) {
 				String msg = "<img src='" + ChatGui.class.getResource("/image/like.png") +"'></img>";
 				try {
-					chat.sendMessage(Encode.sendMessage(msg));
+					chat.sendMessage(Encryption.sendMessage(msg));
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -257,7 +257,7 @@ public class ChatGui {
 			public void actionPerformed(ActionEvent arg0) {
 				if (isSendFile)
 					try {
-						chat.sendMessage(Encode.sendFile(nameFile));
+						chat.sendMessage(Encryption.sendFile(nameFile));
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -271,7 +271,7 @@ public class ChatGui {
 				if (msg.equals(""))
 					return;
 				try {
-					chat.sendMessage(Encode.sendMessage(msg));
+					chat.sendMessage(Encryption.sendMessage(msg));
 					updateChat_send(msg);
 					txtMessage.setText("");
 				} catch (Exception e) {
@@ -307,7 +307,7 @@ public class ChatGui {
 						return;
 					}
 					try {
-						chat.sendMessage(Encode.sendMessage(msg));
+						chat.sendMessage(Encryption.sendMessage(msg));
 						updateChat_send(msg);
 						txtMessage.setText("");
 						txtMessage.setCaretPosition(0);
@@ -424,7 +424,7 @@ public class ChatGui {
 							connect.close();
 							break;
 						}
-						if (Decode.checkFile(msgObj)) {
+						if (Decryption.checkFile(msgObj)) {
 							isReceiveFile = true;
 							nameFileReceive = msgObj.substring(10,
 									msgObj.length() - 11);
@@ -444,7 +444,7 @@ public class ChatGui {
 							} else {
 								sendMessage(Dictionary.FILE_REQ_NOACK);
 							}
-						} else if (Decode.checkFeedBack(msgObj)) {
+						} else if (Decryption.checkFeedBack(msgObj)) {
 							btnChoose.setEnabled(false);
 
 							new Thread(new Runnable() {
@@ -489,7 +489,7 @@ public class ChatGui {
 //							lblReceive.setVisible(false);
 //							finishReceive = true;
 						} else {
-							String message = Decode.getMessage(msgObj);
+							String message = Decryption.getMessage(msgObj);
 							updateChat_receive(message);
 						}
 					} else if (obj instanceof DataFile) {
@@ -525,8 +525,6 @@ public class ChatGui {
 			if (sizeOfData > Dictionary.MAX_MSG_SIZE/1024) {
 				textState.setText("File is too large...");
 				inFileSend.close();
-//				isFileLarge = true;
-//				sendMessage(Dictionary.FILE_DATA_CLOSE);
 				txtPath.setText("");
 				btnChoose.setEnabled(true);
 				isSendFile = false;
@@ -542,7 +540,7 @@ public class ChatGui {
 				System.out.println("sizeOfSend : " + sizeOfSend);
 				if (continueSendFile) {
 					continueSendFile = false;
-//					updateChat_notify("If duoc thuc thi: " + String.valueOf(continueSendFile));
+
 					new Thread(new Runnable() {
 
 						@Override

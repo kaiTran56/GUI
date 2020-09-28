@@ -19,7 +19,7 @@ import javax.swing.UIManager;
 
 import com.tranquyet.client.FriendTable;
 import com.tranquyet.dictionary.Dictionary;
-import com.tranquyet.dictionary.Encode;
+import com.tranquyet.dictionary.Encryption;
 
 public class Login {
  private static String NAME_FAILED = "THIS NAME CONTAINS INVALID CHARACTER. PLEASE TRY AGAIN";
@@ -124,7 +124,7 @@ public class Login {
       int portServer = Integer.parseInt("8080");
       Socket socketClient = new Socket(ipServer, portServer);
 
-      String msg = Encode.getCreateAccount(name, Integer.toString(portPeer));
+      String msg = Encryption.getCreateAccount(name, Integer.toString(portPeer));
       ObjectOutputStream serverOutputStream = new ObjectOutputStream(socketClient.getOutputStream());
       serverOutputStream.writeObject(msg);
       serverOutputStream.flush();

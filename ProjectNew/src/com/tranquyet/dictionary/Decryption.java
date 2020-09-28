@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 
 import com.tranquyet.data.User;
 
-public class Decode {
+public class Decryption {
 
 	private static Pattern createAccount = Pattern
 			.compile(Dictionary.SESSION_OPEN + Dictionary.PEER_NAME_OPEN + ".*" + Dictionary.PEER_NAME_CLOSE

@@ -6,7 +6,7 @@ import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import com.tranquyet.dictionary.Decode;
+import com.tranquyet.dictionary.Decryption;
 import com.tranquyet.dictionary.Dictionary;
 
 public class ClientServer {
@@ -42,7 +42,7 @@ public class ClientServer {
 					connection = serverPeer.accept();
 					getRequest = new ObjectInputStream(connection.getInputStream());
 					String msg = (String) getRequest.readObject();
-					String name = Decode.getNameRequestChat(msg);
+					String name = Decryption.getNameRequestChat(msg);
 					int res = FriendTable.request("Account: " + name + " want to connect with you !", true);
 					ObjectOutputStream send = new ObjectOutputStream(connection.getOutputStream());
 					if (res == 1) {

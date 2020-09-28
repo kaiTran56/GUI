@@ -7,7 +7,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 import com.tranquyet.data.User;
-import com.tranquyet.dictionary.Decode;
+import com.tranquyet.dictionary.Decryption;
 import com.tranquyet.dictionary.Dictionary;
 
 public class ServerCore {
@@ -60,7 +60,7 @@ public class ServerCore {
 		connection = server.accept();
 		obInputStream = new ObjectInputStream(connection.getInputStream());
 		String msg = (String) obInputStream.readObject();
-		ArrayList<String> getData = Decode.getUser(msg);
+		ArrayList<String> getData = Decryption.getUser(msg);
 		ServerGui.updateMessage(msg);
 		if (getData != null) {
 			if (!isExsistName(getData.get(0))) {
@@ -72,7 +72,7 @@ public class ServerCore {
 		} else {
 			int size = dataPeer.size();
 
-			Decode.updatePeerOnline(dataPeer, msg);
+			Decryption.updatePeerOnline(dataPeer, msg);
 			if (size != dataPeer.size()) {
 				isExit = true;
 				ServerGui.decreaseNumberClient();
