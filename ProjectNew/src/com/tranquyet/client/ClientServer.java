@@ -43,7 +43,7 @@ public class ClientServer {
 					getRequest = new ObjectInputStream(connection.getInputStream());
 					String msg = (String) getRequest.readObject();
 					String name = Decode.getNameRequestChat(msg);
-					int res = MainGui.request("Account: " + name + " want to connect with you !", true);
+					int res = FriendTable.request("Account: " + name + " want to connect with you !", true);
 					ObjectOutputStream send = new ObjectOutputStream(connection.getOutputStream());
 					if (res == 1) {
 						send.writeObject(Dictionary.CHAT_DENY);

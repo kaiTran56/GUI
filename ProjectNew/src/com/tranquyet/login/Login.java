@@ -17,7 +17,7 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 
-import com.tranquyet.client.MainGui;
+import com.tranquyet.client.FriendTable;
 import com.tranquyet.dictionary.Dictionary;
 import com.tranquyet.dictionary.Encode;
 
@@ -137,7 +137,7 @@ public class Login {
        lblError.setVisible(true);
        return;
       }
-      new MainGui(IP, portPeer, name, msg);
+      new FriendTable(IP, portPeer, name, msg);
       frameLoginForm.dispose();
      } catch (Exception e) {
       lblError.setText(SERVER_NOT_START);

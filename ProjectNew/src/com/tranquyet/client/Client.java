@@ -16,25 +16,26 @@ import com.tranquyet.dictionary.Encode;
 
 public class Client {
 
-	public static ArrayList<User> clientarray = null;
+	public static ArrayList<User> userList;
 	private ClientServer server;
 	private InetAddress IPserver;
 	private int portServer = 8080;
-	private String nameUser = "";
-	private boolean isStop = false;
-	private static int portClient = 10000; 
-	private int timeOut = 10000;  //time to each request is 10 seconds.
+	private String nameUser;
+
+	private static int portClient = 10000;
+	private int timeOut = 10000;
 	private Socket socketClient;
 	private ObjectInputStream serverInputStream;
 	private ObjectOutputStream serverOutputStream;
 
-	
+	private boolean isStop = false;
+
 	public Client(String arg, int arg1, String name, String dataUser) throws Exception {
 		IPserver = InetAddress.getByName(arg);
 		nameUser = name;
 		portClient = arg1;
-		clientarray = Decode.getAllUser(dataUser);
-		new Thread(new Runnable(){
+		userList = Decode.getAllUser(dataUser);
+		new Thread(new Runnable() {
 			@Override
 			public void run() {
 				updateFriend();
@@ -59,9 +60,7 @@ public class Client {
 		serverInputStream = new ObjectInputStream(socketClient.getInputStream());
 		msg = (String) serverInputStream.readObject();
 		serverInputStream.close();
-		//		just for test
-		System.out.println("toantoan" + msg); //test server return to user
-		clientarray = Decode.getAllUser(msg);
+		userList = Decode.getAllUser(msg);
 		new Thread(new Runnable() {
 
 			@Override
@@ -94,11 +93,10 @@ public class Client {
 		ObjectInputStream receivedChat = new ObjectInputStream(connclient.getInputStream());
 		String msg = (String) receivedChat.readObject();
 		if (msg.equals(Dictionary.CHAT_DENY)) {
-			MainGui.request("Your friend denied connect with you!", false);
+			FriendTable.request("Your friend denied connect with you!", false);
 			connclient.close();
 			return;
 		}
-		//not if
 		new ChatGui(nameUser, guest, connclient, portClient);
 
 	}
@@ -108,23 +106,21 @@ public class Client {
 		socketClient = new Socket();
 		SocketAddress addressServer = new InetSocketAddress(IPserver, portServer);
 		socketClient.connect(addressServer);
-		String msg = Encode.exit(nameUser);
+		String message = Encode.exit(nameUser);
 		serverOutputStream = new ObjectOutputStream(socketClient.getOutputStream());
-		serverOutputStream.writeObject(msg);
+		serverOutputStream.writeObject(message);
 		serverOutputStream.flush();
 		serverOutputStream.close();
 		server.exit();
 	}
 
-	public void updateFriend(){
-		int size = clientarray.size();
-		MainGui.resetList();
-		//while loop
-		int i = 0;
-		while (i < size) {
-			if (!clientarray.get(i).getName().equals(nameUser))
-				MainGui.updateFriendMainGui(clientarray.get(i).getName());
-			i++;
+	public void updateFriend() {
+		int n = userList.size();
+		FriendTable.resetList();
+		for (int i = 0; i < n; i++) {
+			if (!userList.get(i).getName().equals(nameUser)) {
+				FriendTable.updateFriendFriendTable(userList.get(i).getName());
+			}
 		}
 	}
 }
