@@ -11,7 +11,7 @@ import com.tranquyet.dictionary.Dictionary;
 
 public class ClientServer {
 
-	private String username = "";
+	private String username ;
 	private ServerSocket serverPeer;
 	private int port;
 	private boolean isStop = false;
@@ -41,8 +41,8 @@ public class ClientServer {
 				try {
 					connection = serverPeer.accept();
 					getRequest = new ObjectInputStream(connection.getInputStream());
-					String msg = (String) getRequest.readObject();
-					String name = Decryption.getNameRequestChat(msg);
+					String message = (String) getRequest.readObject();
+					String name = Decryption.getNameRequestChat(message);
 					int res = FriendTable.request("Account: " + name + " want to connect with you !", true);
 					ObjectOutputStream send = new ObjectOutputStream(connection.getOutputStream());
 					if (res == 1) {

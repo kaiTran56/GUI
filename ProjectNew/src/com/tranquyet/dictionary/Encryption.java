@@ -28,7 +28,7 @@ public class Encryption {
 			int begin = subMessage.length();
 			char nextChar = message.charAt(subMessage.length() - 1);
 			System.out.println("nextChar: " + nextChar);
-			result += subMessage; // + nextChar
+			result += subMessage; 
 			subMessage = message.substring(begin, message.length());
 			message = subMessage;
 			findMessage = checkMessage.matcher(message);
