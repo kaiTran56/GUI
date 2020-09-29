@@ -26,8 +26,6 @@ import com.tranquyet.dictionary.Encryption;
 
 public class LoginGui {
 
-
-
 	private JFrame frameLogin;
 	private JTextField txtPort;
 	private JLabel lblError;
@@ -37,17 +35,18 @@ public class LoginGui {
 	private JTextField txtUsername;
 	private JButton btnLogin;
 	private Pattern checkName = Pattern.compile("[_a-zA-Z][_a-zA-Z0-9]*");
+
 	public static void main(String[] args) {
 		Decryption.createrBy();
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					LoginGui window = new LoginGui();
-					window.frameLogin.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+		EventQueue.invokeLater(() -> {
+
+			try {
+				LoginGui window = new LoginGui();
+				window.frameLogin.setVisible(true);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
+
 		});
 	}
 

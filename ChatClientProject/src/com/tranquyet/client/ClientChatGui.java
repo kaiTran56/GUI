@@ -65,28 +65,28 @@ public class ClientChatGui {
 		nameGuest = guest;
 		socketChat = socket;
 		this.portServer = port;
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					ClientChatGui window = new ClientChatGui(nameUser, nameGuest, socketChat, portServer, 0);
-					window.frameChatGui.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+		EventQueue.invokeLater(() -> {
+
+			try {
+				ClientChatGui window = new ClientChatGui(nameUser, nameGuest, socketChat, portServer, 0);
+				window.frameChatGui.setVisible(true);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
+
 		});
 	}
 
 	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					ClientChatGui window = new ClientChatGui();
-					window.frameChatGui.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+		EventQueue.invokeLater(() -> {
+
+			try {
+				ClientChatGui window = new ClientChatGui();
+				window.frameChatGui.setVisible(true);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
+
 		});
 	}
 
@@ -419,17 +419,17 @@ public class ClientChatGui {
 						} else if (Decryption.checkFeedBack(msgObj)) {
 							btnChoose.setEnabled(false);
 
-							new Thread(new Runnable() {
-								public void run() {
-									try {
-										sendMessage(Dictionary.FILE_DATA_BEGIN);
-										updateChat_notify("You are sending file: " + nameFile);
-										isSendFile = false;
-										sendFile(txtPath.getText());
-									} catch (Exception e) {
-										e.printStackTrace();
-									}
+							new Thread(() -> {
+
+								try {
+									sendMessage(Dictionary.FILE_DATA_BEGIN);
+									updateChat_notify("You are sending file: " + nameFile);
+									isSendFile = false;
+									sendFile(txtPath.getText());
+								} catch (Exception e) {
+									e.printStackTrace();
 								}
+
 							}).start();
 						} else if (msgObj.equals(Dictionary.FILE_REQ_NOACK)) {
 							Dictionary.show(frameChatGui, nameGuest + " don't want receive file", false);
@@ -452,13 +452,7 @@ public class ClientChatGui {
 								}
 							}).start();
 							finishReceive = true;
-//						} else if (msgObj.equals(Dictionary.FILE_DATA_CLOSE) && isFileLarge == true) {
-//							updateChat_receive("File " + nameFileReceive + " too large to receive");
-//							sizeReceive = 0;
-//							out.flush();
-//							out.close();
-//							lblReceive.setVisible(false);
-//							finishReceive = true;
+
 						} else {
 							String message = Decryption.getMessage(msgObj);
 							updateChat_receive(message);
@@ -511,36 +505,34 @@ public class ClientChatGui {
 				if (continueSendFile) {
 					continueSendFile = false;
 
-					new Thread(new Runnable() {
+					new Thread(() -> {
 
-						@Override
-						public void run() {
-							try {
-								inFileSend.read(dataFile.data);
-								sendMessage(dataFile);
-								sizeOfSend++;
-								if (sizeOfSend == sizeOfData - 1) {
-									int size = sizeFile - sizeOfSend * 1024;
-									dataFile = new DataFile(size);
-								}
-								progressSendFile.setValue((int) (sizeOfSend * 100 / sizeOfData));
-								if (sizeOfSend >= sizeOfData) {
-									inFileSend.close();
-									isSendFile = true;
-									sendMessage(Dictionary.FILE_DATA_CLOSE);
-									progressSendFile.setVisible(false);
-									textState.setVisible(false);
-									isSendFile = false;
-									txtPath.setText("");
-									btnChoose.setEnabled(true);
-									updateChat_notify("File sent complete");
-									inFileSend.close();
-								}
-								continueSendFile = true;
-							} catch (Exception e) {
-								e.printStackTrace();
+						try {
+							inFileSend.read(dataFile.data);
+							sendMessage(dataFile);
+							sizeOfSend++;
+							if (sizeOfSend == sizeOfData - 1) {
+								int size = sizeFile - sizeOfSend * 1024;
+								dataFile = new DataFile(size);
 							}
+							progressSendFile.setValue((int) (sizeOfSend * 100 / sizeOfData));
+							if (sizeOfSend >= sizeOfData) {
+								inFileSend.close();
+								isSendFile = true;
+								sendMessage(Dictionary.FILE_DATA_CLOSE);
+								progressSendFile.setVisible(false);
+								textState.setVisible(false);
+								isSendFile = false;
+								txtPath.setText("");
+								btnChoose.setEnabled(true);
+								updateChat_notify("File sent complete");
+								inFileSend.close();
+							}
+							continueSendFile = true;
+						} catch (Exception e) {
+							e.printStackTrace();
 						}
+
 					}).start();
 				}
 			} while (sizeOfSend < sizeOfData);

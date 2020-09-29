@@ -35,11 +35,9 @@ public class Client {
 		nameUser = name;
 		portClient = arg1;
 		userList = Decryption.getAllUser(dataUser);
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				updateFriend();
-			}
+		new Thread(() -> {
+			updateFriend();
+
 		}).start();
 		server = new ClientServer(nameUser);
 		(new Request()).start();
@@ -61,12 +59,10 @@ public class Client {
 		message = (String) serverInputStream.readObject();
 		serverInputStream.close();
 		userList = Decryption.getAllUser(message);
-		new Thread(new Runnable() {
+		new Thread(() -> {
 
-			@Override
-			public void run() {
-				updateFriend();
-			}
+			updateFriend();
+
 		}).start();
 	}
 
@@ -97,7 +93,7 @@ public class Client {
 			connclient.close();
 			return;
 		}
-		new ChatGui(nameUser, guest, connclient, portClient);
+		new ChatUserGui(nameUser, guest, connclient, portClient);
 
 	}
 
@@ -115,12 +111,12 @@ public class Client {
 	}
 
 	public void updateFriend() {
-		int n = userList.size();
+
 		FriendListGui.resetList();
-		for (int i = 0; i < n; i++) {
-			if (!userList.get(i).getName().equals(nameUser)) {
-				FriendListGui.updateFriendFriendTable(userList.get(i).getName());
+		userList.stream().forEach(p -> {
+			if (!p.getName().equals(nameUser)) {
+				FriendListGui.updateFriendFriendTable(p.getName());
 			}
-		}
+		});
 	}
 }

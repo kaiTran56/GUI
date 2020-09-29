@@ -5,6 +5,7 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Insets;
 import java.awt.Label;
+import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -31,6 +32,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.border.EmptyBorder;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 
@@ -38,7 +40,6 @@ import com.tranquyet.data.DataFile;
 import com.tranquyet.dictionary.Decryption;
 import com.tranquyet.dictionary.Dictionary;
 import com.tranquyet.dictionary.Encryption;
-import java.awt.SystemColor;
 
 public class ChatUserGui {
 
@@ -47,7 +48,9 @@ public class ChatUserGui {
 
 	private ChatRoom chat;
 	private Socket socketChat;
-	private String nameUser = "", nameGuest = "", nameFile = "";
+	private String nameUser = "";
+	private String nameGuest = "";
+	private String nameFile = "";
 	private JFrame frameChatGui;
 	private JTextField textName;
 	private JPanel panelMessage;
@@ -79,43 +82,43 @@ public class ChatUserGui {
 	}
 
 	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					ChatUserGui window = new ChatUserGui();
-					window.frameChatGui.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+		EventQueue.invokeLater(() -> {
+
+			try {
+				ChatUserGui window = new ChatUserGui();
+				window.frameChatGui.setVisible(true);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
+
 		});
 	}
 
-	public void updateChat_receive(String msg) {
+	public void updateChat_receive(String message) throws BadLocationException, IOException {
 		appendToPane(txtDisplayChat,
-				"<div class='left' style='width: 40%; background-color: #f1f0f0;'>" + msg + "</div>");
+				"<div class='left' style='width: 40%; background-color: #f1f0f0;'>" + message + "</div>");
 	}
 
-	public void updateChat_send(String msg) {
-		appendToPane(txtDisplayChat,
-				"<table class='bang' style='color: white; clear:both; width: 100%;'>" + "<tr align='right'>"
-						+ "<td style='width: 59%; '></td>" + "<td style='width: 40%; background-color: #0084ff;'>" + msg
-						+ "</td> </tr>" + "</table>");
-	}
-
-	public void updateChat_notify(String msg) {
+	public void updateChat_send(String message) throws BadLocationException, IOException {
 		appendToPane(txtDisplayChat,
 				"<table class='bang' style='color: white; clear:both; width: 100%;'>" + "<tr align='right'>"
-						+ "<td style='width: 59%; '></td>" + "<td style='width: 40%; background-color: #f1c40f;'>" + msg
-						+ "</td> </tr>" + "</table>");
+						+ "<td style='width: 59%; '></td>" + "<td style='width: 40%; background-color: #0084ff;'>"
+						+ message + "</td> </tr>" + "</table>");
 	}
 
-	public void updateChat_send_Symbol(String msg) {
+	public void updateChat_notify(String message) throws BadLocationException, IOException {
+		appendToPane(txtDisplayChat,
+				"<table class='bang' style='color: white; clear:both; width: 100%;'>" + "<tr align='right'>"
+						+ "<td style='width: 59%; '></td>" + "<td style='width: 40%; background-color: #f1c40f;'>"
+						+ message + "</td> </tr>" + "</table>");
+	}
+
+	public void updateChat_send_Symbol(String message) throws BadLocationException, IOException {
 		appendToPane(txtDisplayChat, "<table style='width: 100%;'>" + "<tr align='right'>"
-				+ "<td style='width: 59%;'></td>" + "<td style='width: 40%;'>" + msg + "</td> </tr>" + "</table>");
+				+ "<td style='width: 59%;'></td>" + "<td style='width: 40%;'>" + message + "</td> </tr>" + "</table>");
 	}
 
-	public ChatUserGui() {
+	public ChatUserGui() throws BadLocationException, IOException {
 		initialize();
 	}
 
@@ -129,7 +132,7 @@ public class ChatUserGui {
 		chat.start();
 	}
 
-	private void initialize() {
+	private void initialize() throws BadLocationException, IOException {
 		File fileTemp = new File(URL_DIR + "/temp");
 		if (!fileTemp.exists()) {
 			fileTemp.mkdirs();
@@ -149,8 +152,8 @@ public class ChatUserGui {
 		frameChatGui.getContentPane().add(lblClientIP);
 
 		textName = new JTextField(nameUser);
-		textName.setForeground(Color.BLACK);
-		textName.setFont(new Font("Segoe UI", Font.PLAIN, 20));
+		textName.setForeground(SystemColor.textHighlight);
+		textName.setFont(new Font("MS PGothic", Font.BOLD | Font.ITALIC, 16));
 		textName.setEditable(false);
 		textName.setBounds(70, 11, 77, 28);
 		frameChatGui.getContentPane().add(textName);
@@ -158,7 +161,7 @@ public class ChatUserGui {
 		textName.setColumns(10);
 
 		panelMessage = new JPanel();
-		panelMessage.setBounds(6, 277, 487, 168);
+		panelMessage.setBounds(6, 277, 473, 168);
 		panelMessage.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Message"));
 		frameChatGui.getContentPane().add(panelMessage);
 		panelMessage.setLayout(null);
@@ -211,14 +214,19 @@ public class ChatUserGui {
 		btnSendLike.setFont(new Font("Tahoma", Font.BOLD, 13));
 		btnSendLike.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String msg = "<img src='" + ChatUserGui.class.getResource("/image/like.png") + "'></img>";
+				String message = "<img src='" + ChatUserGui.class.getResource("/image/like.png") + "'></img>";
 				try {
-					chat.sendMessage(Encryption.sendMessage(msg));
+					chat.sendMessage(Encryption.sendMessage(message));
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-				updateChat_send_Symbol(msg);
+				try {
+					updateChat_send_Symbol(message);
+				} catch (BadLocationException | IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		});
 		btnSendLike.setBackground(new Color(240, 240, 240));
@@ -227,17 +235,17 @@ public class ChatUserGui {
 		btnSendLike.setBorder(new EmptyBorder(0, 0, 0, 0));
 
 		panelMessage.add(btnSendLike);
-		
-				progressSendFile = new JProgressBar(0, 100);
-				progressSendFile.setBounds(10, 125, 250, 14);
-				panelMessage.add(progressSendFile);
-				progressSendFile.setStringPainted(true);
-				
-						lblReceive = new Label("download ...");
-						lblReceive.setBounds(270, 125, 64, 14);
-						panelMessage.add(lblReceive);
-						lblReceive.setVisible(false);
-				progressSendFile.setVisible(false);
+
+		progressSendFile = new JProgressBar(0, 100);
+		progressSendFile.setBounds(10, 125, 250, 14);
+		panelMessage.add(progressSendFile);
+		progressSendFile.setStringPainted(true);
+
+		lblReceive = new Label("download ...");
+		lblReceive.setBounds(270, 125, 64, 14);
+		panelMessage.add(lblReceive);
+		lblReceive.setVisible(false);
+		progressSendFile.setVisible(false);
 
 		btnSend.addActionListener(new ActionListener() {
 
@@ -250,16 +258,21 @@ public class ChatUserGui {
 					}
 
 				if (isStop) {
-					updateChat_send(txtMessage.getText().toString());
+					try {
+						updateChat_send(txtMessage.getText().toString());
+					} catch (BadLocationException | IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					txtMessage.setText(""); // reset text Send
 					return;
 				}
-				String msg = txtMessage.getText();
-				if (msg.equals(""))
+				String message = txtMessage.getText();
+				if (message.equals(""))
 					return;
 				try {
-					chat.sendMessage(Encryption.sendMessage(msg));
-					updateChat_send(msg);
+					chat.sendMessage(Encryption.sendMessage(message));
+					updateChat_send(message);
 					txtMessage.setText("");
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -282,20 +295,28 @@ public class ChatUserGui {
 			@Override
 			public void keyPressed(KeyEvent arg0) {
 				if (arg0.getKeyCode() == KeyEvent.VK_ENTER) {
-					String msg = txtMessage.getText();
+					String message = txtMessage.getText();
 					if (isStop) {
-						updateChat_send(txtMessage.getText().toString());
+						try {
+							updateChat_send(txtMessage.getText().toString());
+						} catch (BadLocationException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 						txtMessage.setText("");
 						return;
 					}
-					if (msg.equals("")) {
+					if (message.equals("")) {
 						txtMessage.setText("");
 						txtMessage.setCaretPosition(0);
 						return;
 					}
 					try {
-						chat.sendMessage(Encryption.sendMessage(msg));
-						updateChat_send(msg);
+						chat.sendMessage(Encryption.sendMessage(message));
+						updateChat_send(message);
 						txtMessage.setText("");
 						txtMessage.setCaretPosition(0);
 					} catch (Exception e) {
@@ -326,7 +347,7 @@ public class ChatUserGui {
 			}
 		});
 
-		btnDisConnect.setBounds(303, 12, 68, 28);
+		btnDisConnect.setBounds(303, 18, 68, 28);
 		frameChatGui.getContentPane().add(btnDisConnect);
 
 		textState = new Label("");
@@ -342,14 +363,23 @@ public class ChatUserGui {
 		txtDisplayChat.setMargin(new Insets(6, 6, 6, 6));
 		txtDisplayChat.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, true);
 		txtDisplayChat.setBounds(6, 59, 670, 291);
-		appendToPane(txtDisplayChat, "<div class='clear' style='background-color:white'></div>"); // set default
-																									// background
+		appendToPane(txtDisplayChat, "<div class='clear' style='background-color:black'/>");
 
 		frameChatGui.getContentPane().add(txtDisplayChat);
 
 		scrollPane = new JScrollPane(txtDisplayChat);
 		scrollPane.setBounds(6, 59, 365, 207);
 		frameChatGui.getContentPane().add(scrollPane);
+
+		JScrollPane scrollListFriend = new JScrollPane();
+		scrollListFriend.setBounds(395, 59, 68, 205);
+		frameChatGui.getContentPane().add(scrollListFriend);
+
+		JLabel lblFriend = new JLabel("Friends:");
+		lblFriend.setForeground(Color.GREEN);
+		lblFriend.setFont(new Font("Tahoma", Font.BOLD, 13));
+		lblFriend.setBounds(395, 21, 68, 25);
+		frameChatGui.getContentPane().add(lblFriend);
 
 	}
 
@@ -379,8 +409,8 @@ public class ChatUserGui {
 					inPeer = new ObjectInputStream(connect.getInputStream());
 					Object obj = inPeer.readObject();
 					if (obj instanceof String) {
-						String msgObj = obj.toString();
-						if (msgObj.equals(Dictionary.CHAT_CLOSE)) {
+						String messageObj = obj.toString();
+						if (messageObj.equals(Dictionary.CHAT_CLOSE)) {
 							isStop = true;
 							Dictionary.show(frameChatGui,
 									nameGuest + " closed chat with you! This windows will also be closed.", false);
@@ -389,16 +419,15 @@ public class ChatUserGui {
 								frameChatGui.dispose();
 								chat.sendMessage(Dictionary.CHAT_CLOSE);
 								chat.stopChat();
-								System.gc();
 							} catch (Exception e) {
 								e.printStackTrace();
 							}
 							connect.close();
 							break;
 						}
-						if (Decryption.checkFile(msgObj)) {
+						if (Decryption.checkFile(messageObj)) {
 							isReceiveFile = true;
-							nameFileReceive = msgObj.substring(10, msgObj.length() - 11);
+							nameFileReceive = messageObj.substring(10, messageObj.length() - 11);
 							int result = Dictionary.show(frameChatGui,
 									nameGuest + " send file " + nameFileReceive + " for you", true);
 							if (result == 0) {
@@ -406,13 +435,13 @@ public class ChatUserGui {
 								if (!fileReceive.exists()) {
 									fileReceive.createNewFile();
 								}
-								String msg = Dictionary.FILE_REQ_ACK_OPEN + Integer.toBinaryString(portServer)
+								String message = Dictionary.FILE_REQ_ACK_OPEN + Integer.toBinaryString(portServer)
 										+ Dictionary.FILE_REQ_ACK_CLOSE;
-								sendMessage(msg);
+								sendMessage(message);
 							} else {
 								sendMessage(Dictionary.FILE_REQ_NOACK);
 							}
-						} else if (Decryption.checkFeedBack(msgObj)) {
+						} else if (Decryption.checkFeedBack(messageObj)) {
 							btnChoose.setEnabled(false);
 
 							new Thread(new Runnable() {
@@ -427,13 +456,13 @@ public class ChatUserGui {
 									}
 								}
 							}).start();
-						} else if (msgObj.equals(Dictionary.FILE_REQ_NOACK)) {
+						} else if (messageObj.equals(Dictionary.FILE_REQ_NOACK)) {
 							Dictionary.show(frameChatGui, nameGuest + " don't want receive file", false);
-						} else if (msgObj.equals(Dictionary.FILE_DATA_BEGIN)) {
+						} else if (messageObj.equals(Dictionary.FILE_DATA_BEGIN)) {
 							finishReceive = false;
 							lblReceive.setVisible(true);
 							out = new FileOutputStream(URL_DIR + TEMP + nameFileReceive);
-						} else if (msgObj.equals(Dictionary.FILE_DATA_CLOSE)) {
+						} else if (messageObj.equals(Dictionary.FILE_DATA_CLOSE)) {
 							updateChat_receive(
 									"You receive file: " + nameFileReceive + " with size " + sizeReceive + " KB");
 							sizeReceive = 0;
@@ -448,15 +477,9 @@ public class ChatUserGui {
 								}
 							}).start();
 							finishReceive = true;
-//						} else if (msgObj.equals(Dictionary.FILE_DATA_CLOSE) && isFileLarge == true) {
-//							updateChat_receive("File " + nameFileReceive + " too large to receive");
-//							sizeReceive = 0;
-//							out.flush();
-//							out.close();
-//							lblReceive.setVisible(false);
-//							finishReceive = true;
+
 						} else {
-							String message = Decryption.getMessage(msgObj);
+							String message = Decryption.getMessage(messageObj);
 							updateChat_receive(message);
 						}
 					} else if (obj instanceof DataFile) {
@@ -501,9 +524,8 @@ public class ChatUserGui {
 			progressSendFile.setVisible(true);
 			progressSendFile.setValue(0);
 
-			textState.setText("Sending ...");
+			textState.setText("uploading ...");
 			do {
-				System.out.println("sizeOfSend : " + sizeOfSend);
 				if (continueSendFile) {
 					continueSendFile = false;
 
@@ -614,16 +636,12 @@ public class ChatUserGui {
 	}
 
 	// send html to pane
-	private void appendToPane(JTextPane tp, String msg) {
+	private void appendToPane(JTextPane tp, String message) throws BadLocationException, IOException {
 		HTMLDocument doc = (HTMLDocument) tp.getDocument();
 		HTMLEditorKit editorKit = (HTMLEditorKit) tp.getEditorKit();
-		try {
 
-			editorKit.insertHTML(doc, doc.getLength(), msg, 0, 0, null);
-			tp.setCaretPosition(doc.getLength());
+		editorKit.insertHTML(doc, doc.getLength(), message, 0, 0, null);
+		tp.setCaretPosition(doc.getLength());
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 }

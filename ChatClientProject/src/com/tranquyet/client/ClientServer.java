@@ -50,7 +50,7 @@ public class ClientServer {
 
 					} else if (res == 0) {
 						send.writeObject(Dictionary.CHAT_ACCEPT);
-						new ChatGui(username, name, connection, port);
+						new ChatUserGui(username, name, connection, port);
 					}
 					send.flush();
 				} catch (Exception e) {
