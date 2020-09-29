@@ -26,15 +26,15 @@ public class ServerChatGui {
 	ServerCode server;
 
 	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					ServerChatGui window = new ServerChatGui();
-					window.frameServer.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+		EventQueue.invokeLater(() -> {
+
+			try {
+				ServerChatGui window = new ServerChatGui();
+				window.frameServer.setVisible(true);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
+
 		});
 	}
 
