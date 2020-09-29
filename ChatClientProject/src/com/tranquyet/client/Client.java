@@ -93,7 +93,7 @@ public class Client {
 		ObjectInputStream receivedChat = new ObjectInputStream(connclient.getInputStream());
 		String message = (String) receivedChat.readObject();
 		if (message.equals(Dictionary.CHAT_DENY)) {
-			FriendTable.request("Your friend denied connect with you!", false);
+			FriendListGui.request("Your friend denied connect with you!", false);
 			connclient.close();
 			return;
 		}
@@ -116,10 +116,10 @@ public class Client {
 
 	public void updateFriend() {
 		int n = userList.size();
-		FriendTable.resetList();
+		FriendListGui.resetList();
 		for (int i = 0; i < n; i++) {
 			if (!userList.get(i).getName().equals(nameUser)) {
-				FriendTable.updateFriendFriendTable(userList.get(i).getName());
+				FriendListGui.updateFriendFriendTable(userList.get(i).getName());
 			}
 		}
 	}

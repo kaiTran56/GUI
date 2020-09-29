@@ -17,7 +17,7 @@ import javax.swing.JTextField;
 
 import com.tranquyet.dictionary.Dictionary;
 
-public class FriendTable {
+public class FriendListGui {
 
 	private Client clientNode;
 	private static String IPClient = "", nameUser = "", dataUser = "";
@@ -28,16 +28,15 @@ public class FriendTable {
 	private JLabel lblLogo;
 	private JLabel lblActiveNow;
 	private static JList<String> listActive;
-	
+
 	static DefaultListModel<String> model = new DefaultListModel<>();
 	private JLabel lblUsername;
-
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					FriendTable window = new FriendTable();
+					FriendListGui window = new FriendListGui();
 					window.frameFriendTable.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -46,7 +45,7 @@ public class FriendTable {
 		});
 	}
 
-	public FriendTable(String arg, int arg1, String name, String msg) throws Exception {
+	public FriendListGui(String arg, int arg1, String name, String msg) throws Exception {
 		IPClient = arg;
 		portClient = arg1;
 		nameUser = name;
@@ -54,7 +53,7 @@ public class FriendTable {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					FriendTable window = new FriendTable();
+					FriendListGui window = new FriendListGui();
 					window.frameFriendTable.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -63,7 +62,7 @@ public class FriendTable {
 		});
 	}
 
-	public FriendTable() throws Exception {
+	public FriendListGui() throws Exception {
 		initialize();
 		clientNode = new Client(IPClient, portClient, nameUser, dataUser);
 	}
@@ -74,35 +73,38 @@ public class FriendTable {
 
 	public static void resetList() {
 		model.clear();
-	} 
-	
+	}
+
 	private void initialize() {
 		frameFriendTable = new JFrame();
-		frameFriendTable.setTitle("Menu Chat");
+		frameFriendTable.setForeground(Color.BLACK);
+		frameFriendTable.setFont(new Font("Dialog", Font.BOLD | Font.ITALIC, 16));
+		frameFriendTable.setBackground(Color.BLACK);
+		frameFriendTable.getContentPane().setBackground(Color.LIGHT_GRAY);
+		frameFriendTable.setTitle("Friend Table");
 		frameFriendTable.setResizable(false);
-		frameFriendTable.setBounds(100, 100, 500, 560);
+		frameFriendTable.setBounds(100, 100, 272, 450);
 		frameFriendTable.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frameFriendTable.getContentPane().setLayout(null);
 
-		JLabel lblHello = new JLabel("Welcome");
-		lblHello.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-		lblHello.setBounds(12, 82, 70, 16);
+		JLabel lblHello = new JLabel("Welcome: ");
+		lblHello.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 15));
+		lblHello.setBounds(12, 82, 76, 16);
 		frameFriendTable.getContentPane().add(lblHello);
 
-
-		JLabel lblFriendsName = new JLabel("Name Friend: ");
-		lblFriendsName.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-		lblFriendsName.setBounds(12, 425, 110, 16);
+		JLabel lblFriendsName = new JLabel("Name: ");
+		lblFriendsName.setFont(new Font("Segoe UI", Font.BOLD, 15));
+		lblFriendsName.setBounds(12, 254, 110, 16);
 		frameFriendTable.getContentPane().add(lblFriendsName);
-		
+
 		txtNameFriend = new JTextField("");
 		txtNameFriend.setFont(new Font("Segoe UI", Font.PLAIN, 13));
 		txtNameFriend.setColumns(10);
-		txtNameFriend.setBounds(100, 419, 384, 28);
+		txtNameFriend.setBounds(64, 250, 188, 28);
 		frameFriendTable.getContentPane().add(txtNameFriend);
 
 		btnChat = new JButton("Chat");
-		btnChat.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+		btnChat.setFont(new Font("SansSerif", Font.BOLD, 15));
 
 		btnChat.addActionListener(new ActionListener() {
 
@@ -120,7 +122,8 @@ public class FriendTable {
 				for (int i = 0; i < size; i++) {
 					if (name.equals(Client.userList.get(i).getName())) {
 						try {
-							clientNode.intialNewChat(Client.userList.get(i).getHost(),Client.userList.get(i).getPort(), name);
+							clientNode.intialNewChat(Client.userList.get(i).getHost(), Client.userList.get(i).getPort(),
+									name);
 							return;
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -130,11 +133,11 @@ public class FriendTable {
 				Dictionary.show(frameFriendTable, "Friend is not found. Please wait to update your list friend", false);
 			}
 		});
-		btnChat.setBounds(20, 465, 129, 44);
+		btnChat.setBounds(10, 289, 94, 44);
 		frameFriendTable.getContentPane().add(btnChat);
-		
+
 		btnExit = new JButton("Exit");
-		btnExit.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+		btnExit.setFont(new Font("SansSerif", Font.BOLD, 15));
 		btnExit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				int result = Dictionary.show(frameFriendTable, "Are you sure ?", true);
@@ -148,44 +151,43 @@ public class FriendTable {
 				}
 			}
 		});
-		btnExit.setBounds(353, 465, 129, 44);
-		
+		btnExit.setBounds(149, 289, 104, 44);
+
 		frameFriendTable.getContentPane().add(btnExit);
-		
-		lblLogo = new JLabel("CONNECT WITH EVERYONE IN THE WORLD");
-		lblLogo.setForeground(new Color(0, 0, 205));
-		
+
+		lblLogo = new JLabel("List Friends");
+		lblLogo.setForeground(Color.BLACK);
+
 		lblLogo.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		lblLogo.setBounds(51, 13, 413, 38);
+		lblLogo.setBounds(87, 11, 110, 38);
 		frameFriendTable.getContentPane().add(lblLogo);
-		
-		lblActiveNow = new JLabel("List Account Active Now");
-		lblActiveNow.setForeground(new Color(100, 149, 237));
-		lblActiveNow.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+
+		lblActiveNow = new JLabel("Friends:");
+		lblActiveNow.setForeground(new Color(0, 0, 255));
+		lblActiveNow.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 15));
 		lblActiveNow.setBounds(10, 123, 156, 16);
 		frameFriendTable.getContentPane().add(lblActiveNow);
-		
+
 		listActive = new JList<>(model);
-		listActive.setFont(new Font("Segoe UI", Font.PLAIN, 15));
+		listActive.setForeground(Color.BLUE);
+		listActive.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 15));
 		listActive.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				String value = (String)listActive.getModel().getElementAt(listActive.locationToIndex(arg0.getPoint()));
+				String value = (String) listActive.getModel().getElementAt(listActive.locationToIndex(arg0.getPoint()));
 				txtNameFriend.setText(value);
 			}
 		});
-		listActive.setBounds(12, 152, 472, 251);
+		listActive.setBounds(12, 144, 240, 99);
 		frameFriendTable.getContentPane().add(listActive);
-		
+
 		lblUsername = new JLabel(nameUser);
 		lblUsername.setForeground(Color.RED);
 		lblUsername.setFont(new Font("Segoe UI", Font.PLAIN, 15));
-		lblUsername.setBounds(75, 76, 156, 28);
+		lblUsername.setBounds(85, 70, 94, 28);
 		frameFriendTable.getContentPane().add(lblUsername);
-	
-			
+
 	}
-		
 
 	public static int request(String msg, boolean type) {
 		JFrame frameMessage = new JFrame();

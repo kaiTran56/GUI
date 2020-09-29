@@ -19,14 +19,14 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-import com.tranquyet.client.FriendTable;
+import com.tranquyet.client.FriendListGui;
 import com.tranquyet.dictionary.Decryption;
 import com.tranquyet.dictionary.Dictionary;
 import com.tranquyet.dictionary.Encryption;
 
 public class LoginGui {
 
-	private Pattern checkName = Pattern.compile("[_a-zA-Z][_a-zA-Z0-9]*");
+
 
 	private JFrame frameLogin;
 	private JTextField txtPort;
@@ -36,7 +36,7 @@ public class LoginGui {
 	private JTextField txtIP;
 	private JTextField txtUsername;
 	private JButton btnLogin;
-
+	private Pattern checkName = Pattern.compile("[_a-zA-Z][_a-zA-Z0-9]*");
 	public static void main(String[] args) {
 		Decryption.createrBy();
 		EventQueue.invokeLater(new Runnable() {
@@ -147,7 +147,7 @@ public class LoginGui {
 							lblError.setVisible(true);
 							return;
 						}
-						new FriendTable(IP, portPeer, name, message);
+						new FriendListGui(IP, portPeer, name, message);
 						frameLogin.dispose();
 					} catch (Exception e) {
 						lblError.setText("Please turn on the Server....!");
