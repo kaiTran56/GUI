@@ -150,6 +150,7 @@ public class ChatUserGui {
 			fileTemp.mkdirs();
 		}
 		frameChatGui = new JFrame();
+		frameChatGui.setResizable(false);
 		frameChatGui.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		frameChatGui.getContentPane().setBackground(Color.DARK_GRAY);
 		frameChatGui.setTitle("Private Chat");
