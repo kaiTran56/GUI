@@ -33,32 +33,32 @@ public class FriendListGui {
 	private JLabel lblUsername;
 
 	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					FriendListGui window = new FriendListGui();
-					window.frameFriendTable.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+		EventQueue.invokeLater(() -> {
+
+			try {
+				FriendListGui window = new FriendListGui();
+				window.frameFriendTable.setVisible(true);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
+
 		});
 	}
 
-	public FriendListGui(String arg, int arg1, String name, String msg) throws Exception {
+	public FriendListGui(String arg, int arg1, String name, String message) throws Exception {
 		IPClient = arg;
 		portClient = arg1;
 		nameUser = name;
-		dataUser = msg;
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					FriendListGui window = new FriendListGui();
-					window.frameFriendTable.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+		dataUser = message;
+		EventQueue.invokeLater(() -> {
+
+			try {
+				FriendListGui window = new FriendListGui();
+				window.frameFriendTable.setVisible(true);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
+
 		});
 	}
 
@@ -67,22 +67,25 @@ public class FriendListGui {
 		clientNode = new Client(IPClient, portClient, nameUser, dataUser);
 	}
 
-	public static void updateFriendFriendTable(String msg) {
-		model.addElement(msg);
+	public static void updateFriendFriendTable(String message) {
+		model.addElement(message);
 	}
 
 	public static void resetList() {
 		model.clear();
 	}
 
+	/**
+	 * @wbp.parser.entryPoint
+	 */
 	private void initialize() {
 		frameFriendTable = new JFrame();
+		frameFriendTable.setResizable(false);
 		frameFriendTable.setForeground(Color.BLACK);
 		frameFriendTable.setFont(new Font("Dialog", Font.BOLD | Font.ITALIC, 16));
 		frameFriendTable.setBackground(Color.BLACK);
 		frameFriendTable.getContentPane().setBackground(Color.LIGHT_GRAY);
 		frameFriendTable.setTitle("Friend Table");
-		frameFriendTable.setResizable(false);
 		frameFriendTable.setBounds(100, 100, 272, 450);
 		frameFriendTable.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frameFriendTable.getContentPane().setLayout(null);
@@ -118,19 +121,19 @@ public class FriendListGui {
 					Dictionary.show(frameFriendTable, "This software doesn't support chat yourself function", false);
 					return;
 				}
-				int size = Client.userList.size();
-				for (int i = 0; i < size; i++) {
-					if (name.equals(Client.userList.get(i).getName())) {
+
+				Client.userList.stream().forEach(p -> {
+					if (p.getName().equals(name)) {
 						try {
-							clientNode.intialNewChat(Client.userList.get(i).getHost(), Client.userList.get(i).getPort(),
-									name);
-							return;
+							clientNode.intialNewChat(p.getHost(), p.getPort(), name);
 						} catch (Exception e) {
+							Dictionary.show(frameFriendTable,
+									"Friend is not found. Please wait to update your list friend", false);
 							e.printStackTrace();
 						}
 					}
-				}
-				Dictionary.show(frameFriendTable, "Friend is not found. Please wait to update your list friend", false);
+				});
+
 			}
 		});
 		btnChat.setBounds(10, 289, 94, 44);
@@ -189,8 +192,8 @@ public class FriendListGui {
 
 	}
 
-	public static int request(String msg, boolean type) {
+	public static int request(String message, boolean type) {
 		JFrame frameMessage = new JFrame();
-		return Dictionary.show(frameMessage, msg, type);
+		return Dictionary.show(frameMessage, message, type);
 	}
 }

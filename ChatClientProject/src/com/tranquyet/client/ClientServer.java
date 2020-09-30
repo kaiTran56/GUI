@@ -43,7 +43,7 @@ public class ClientServer {
 					getRequest = new ObjectInputStream(connection.getInputStream());
 					String message = (String) getRequest.readObject();
 					String name = Decryption.getNameRequestChat(message);
-					int res = FriendListGui.request("Account: " + name + " want to connect with you !", true);
+					int res = FriendListGui.request("User: " + name + " want to connect with you !", true);
 					ObjectOutputStream send = new ObjectOutputStream(connection.getOutputStream());
 					if (res == 1) {
 						send.writeObject(Dictionary.CHAT_DENY);

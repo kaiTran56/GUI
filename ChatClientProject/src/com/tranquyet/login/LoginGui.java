@@ -36,6 +36,7 @@ public class LoginGui {
 	private JButton btnLogin;
 	private Pattern checkName = Pattern.compile("[_a-zA-Z][_a-zA-Z0-9]*");
 
+
 	public static void main(String[] args) {
 		Decryption.createrBy();
 		EventQueue.invokeLater(() -> {

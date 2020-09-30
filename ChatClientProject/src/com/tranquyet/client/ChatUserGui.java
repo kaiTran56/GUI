@@ -43,7 +43,7 @@ import com.tranquyet.dictionary.Encryption;
 
 public class ChatUserGui {
 
-	private static String URL_DIR = System.getProperty("user.dir");
+	private static String URL = System.getProperty("user.dir");
 	private static String TEMP = "/temp/";
 
 	private ChatRoom chat;
@@ -69,18 +69,21 @@ public class ChatUserGui {
 		nameGuest = guest;
 		socketChat = socket;
 		this.portServer = port;
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					ChatUserGui window = new ChatUserGui(nameUser, nameGuest, socketChat, portServer, 0);
-					window.frameChatGui.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+		EventQueue.invokeLater(() -> {
+
+			try {
+				ChatUserGui window = new ChatUserGui(nameUser, nameGuest, socketChat, portServer, 0);
+				window.frameChatGui.setVisible(true);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
+
 		});
 	}
 
+	/**
+	 * @wbp.parser.entryPoint
+	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(() -> {
 
@@ -92,30 +95,6 @@ public class ChatUserGui {
 			}
 
 		});
-	}
-
-	public void updateChat_receive(String message) throws BadLocationException, IOException {
-		appendToPane(txtDisplayChat,
-				"<div class='left' style='width: 40%; background-color: #f1f0f0;'>" + message + "</div>");
-	}
-
-	public void updateChat_send(String message) throws BadLocationException, IOException {
-		appendToPane(txtDisplayChat,
-				"<table class='bang' style='color: white; clear:both; width: 100%;'>" + "<tr align='right'>"
-						+ "<td style='width: 59%; '></td>" + "<td style='width: 40%; background-color: #0084ff;'>"
-						+ message + "</td> </tr>" + "</table>");
-	}
-
-	public void updateChat_notify(String message) throws BadLocationException, IOException {
-		appendToPane(txtDisplayChat,
-				"<table class='bang' style='color: white; clear:both; width: 100%;'>" + "<tr align='right'>"
-						+ "<td style='width: 59%; '></td>" + "<td style='width: 40%; background-color: #f1c40f;'>"
-						+ message + "</td> </tr>" + "</table>");
-	}
-
-	public void updateChat_send_Symbol(String message) throws BadLocationException, IOException {
-		appendToPane(txtDisplayChat, "<table style='width: 100%;'>" + "<tr align='right'>"
-				+ "<td style='width: 59%;'></td>" + "<td style='width: 40%;'>" + message + "</td> </tr>" + "</table>");
 	}
 
 	public ChatUserGui() throws BadLocationException, IOException {
@@ -132,8 +111,41 @@ public class ChatUserGui {
 		chat.start();
 	}
 
+	/**
+	 * @wbp.parser.entryPoint
+	 */
+	public void updateChatReceive(String message) throws BadLocationException, IOException {
+		appendToPane(txtDisplayChat,
+				"<div class='left' style='width: 40%; background-color: #f1f0f0;'>" + message + "</div>");
+	}
+
+	public void updateChatSend(String message) throws BadLocationException, IOException {
+		appendToPane(txtDisplayChat,
+				"<table class='bang' style='color: white; clear:both; width: 100%;'>" + "<tr align='right'>"
+						+ "<td style='width: 59%; '></td>" + "<td style='width: 40%; background-color: #0084ff;'>"
+						+ message + "</td> </tr>" + "</table>");
+	}
+
+	/**
+	 * @wbp.parser.entryPoint
+	 */
+	public void updateChatNotify(String message) throws BadLocationException, IOException {
+		appendToPane(txtDisplayChat,
+				"<table class='bang' style='color: white; clear:both; width: 100%;'>" + "<tr align='right'>"
+						+ "<td style='width: 59%; '></td>" + "<td style='width: 40%; background-color: #f1c40f;'>"
+						+ message + "</td> </tr>" + "</table>");
+	}
+
+	public void updateSendSymbol(String message) throws BadLocationException, IOException {
+		appendToPane(txtDisplayChat, "<table style='width: 100%;'>" + "<tr align='right'>"
+				+ "<td style='width: 59%;'></td>" + "<td style='width: 40%;'>" + message + "</td> </tr>" + "</table>");
+	}
+
+	/**
+	 * @wbp.parser.entryPoint
+	 */
 	private void initialize() throws BadLocationException, IOException {
-		File fileTemp = new File(URL_DIR + "/temp");
+		File fileTemp = new File(URL + "/temp");
 		if (!fileTemp.exists()) {
 			fileTemp.mkdirs();
 		}
@@ -191,7 +203,7 @@ public class ChatUserGui {
 				if (result == JFileChooser.APPROVE_OPTION) {
 					isSendFile = true;
 					String path_send = (fileChooser.getSelectedFile().getAbsolutePath());
-					System.out.println(path_send);
+
 					nameFile = fileChooser.getSelectedFile().getName();
 					txtPath.setText(path_send);
 				}
@@ -222,7 +234,7 @@ public class ChatUserGui {
 					e1.printStackTrace();
 				}
 				try {
-					updateChat_send_Symbol(message);
+					updateSendSymbol(message);
 				} catch (BadLocationException | IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -259,7 +271,7 @@ public class ChatUserGui {
 
 				if (isStop) {
 					try {
-						updateChat_send(txtMessage.getText().toString());
+						updateChatSend(txtMessage.getText().toString());
 					} catch (BadLocationException | IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -272,7 +284,7 @@ public class ChatUserGui {
 					return;
 				try {
 					chat.sendMessage(Encryption.sendMessage(message));
-					updateChat_send(message);
+					updateChatSend(message);
 					txtMessage.setText("");
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -298,7 +310,7 @@ public class ChatUserGui {
 					String message = txtMessage.getText();
 					if (isStop) {
 						try {
-							updateChat_send(txtMessage.getText().toString());
+							updateChatSend(txtMessage.getText().toString());
 						} catch (BadLocationException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -316,7 +328,7 @@ public class ChatUserGui {
 					}
 					try {
 						chat.sendMessage(Encryption.sendMessage(message));
-						updateChat_send(message);
+						updateChatSend(message);
 						txtMessage.setText("");
 						txtMessage.setCaretPosition(0);
 					} catch (Exception e) {
@@ -383,6 +395,33 @@ public class ChatUserGui {
 
 	}
 
+	public void copyFileReceive(InputStream inputStr, OutputStream outputStr, String path) throws IOException {
+		byte[] buffer = new byte[1024];
+		int lenght;
+		while ((lenght = inputStr.read(buffer)) > 0) {
+			outputStr.write(buffer, 0, lenght);
+		}
+		inputStr.close();
+		outputStr.close();
+		File fileTemp = new File(path);
+		if (fileTemp.exists()) {
+			fileTemp.delete();
+		}
+	}
+
+	// send html to pane
+	/**
+	 * @wbp.parser.entryPoint
+	 */
+	private void appendToPane(JTextPane tp, String message) throws BadLocationException, IOException {
+		HTMLDocument docHtml = (HTMLDocument) tp.getDocument();
+		HTMLEditorKit editorKitHtml = (HTMLEditorKit) tp.getEditorKit();
+
+		editorKitHtml.insertHTML(docHtml, docHtml.getLength(), message, 0, 0, null);
+		tp.setCaretPosition(docHtml.getLength());
+
+	}
+
 	public class ChatRoom extends Thread {
 
 		private Socket connect;
@@ -431,7 +470,7 @@ public class ChatUserGui {
 							int result = Dictionary.show(frameChatGui,
 									nameGuest + " send file " + nameFileReceive + " for you", true);
 							if (result == 0) {
-								File fileReceive = new File(URL_DIR + TEMP + "/" + nameFileReceive);
+								File fileReceive = new File(URL + TEMP + "/" + nameFileReceive);
 								if (!fileReceive.exists()) {
 									fileReceive.createNewFile();
 								}
@@ -444,43 +483,41 @@ public class ChatUserGui {
 						} else if (Decryption.checkFeedBack(messageObj)) {
 							btnChoose.setEnabled(false);
 
-							new Thread(new Runnable() {
-								public void run() {
-									try {
-										sendMessage(Dictionary.FILE_DATA_BEGIN);
-										updateChat_notify("You are sending file: " + nameFile);
-										isSendFile = false;
-										sendFile(txtPath.getText());
-									} catch (Exception e) {
-										e.printStackTrace();
-									}
+							new Thread(() -> {
+
+								try {
+									sendMessage(Dictionary.FILE_DATA_BEGIN);
+									updateChatNotify("Sending file: " + nameFile);
+									isSendFile = false;
+									sendFile(txtPath.getText());
+								} catch (Exception e) {
+									e.printStackTrace();
 								}
+
 							}).start();
 						} else if (messageObj.equals(Dictionary.FILE_REQ_NOACK)) {
 							Dictionary.show(frameChatGui, nameGuest + " don't want receive file", false);
 						} else if (messageObj.equals(Dictionary.FILE_DATA_BEGIN)) {
 							finishReceive = false;
 							lblReceive.setVisible(true);
-							out = new FileOutputStream(URL_DIR + TEMP + nameFileReceive);
+							out = new FileOutputStream(URL + TEMP + nameFileReceive);
 						} else if (messageObj.equals(Dictionary.FILE_DATA_CLOSE)) {
-							updateChat_receive(
-									"You receive file: " + nameFileReceive + " with size " + sizeReceive + " KB");
+							updateChatReceive(
+									"Receive file: " + nameFileReceive + " with size " + sizeReceive + " KB");
 							sizeReceive = 0;
 							out.flush();
 							out.close();
 							lblReceive.setVisible(false);
-							new Thread(new Runnable() {
+							new Thread(() -> {
 
-								@Override
-								public void run() {
-									showSaveFile();
-								}
+								showSaveFile();
+
 							}).start();
 							finishReceive = true;
 
 						} else {
 							String message = Decryption.getMessage(messageObj);
-							updateChat_receive(message);
+							updateChatReceive(message);
 						}
 					} else if (obj instanceof DataFile) {
 						DataFile data = (DataFile) obj;
@@ -488,7 +525,7 @@ public class ChatUserGui {
 						out.write(data.data);
 					}
 				} catch (Exception e) {
-					File fileTemp = new File(URL_DIR + TEMP + nameFileReceive);
+					File fileTemp = new File(URL + TEMP + nameFileReceive);
 					if (fileTemp.exists() && !finishReceive) {
 						fileTemp.delete();
 					}
@@ -512,7 +549,7 @@ public class ChatUserGui {
 			getData(path);
 			textState.setVisible(true);
 			if (sizeOfData > Dictionary.MAX_MSG_SIZE / 1024) {
-				textState.setText("File is too large...");
+				textState.setText("File is too huge...");
 				inFileSend.close();
 				txtPath.setText("");
 				btnChoose.setEnabled(true);
@@ -529,36 +566,34 @@ public class ChatUserGui {
 				if (continueSendFile) {
 					continueSendFile = false;
 
-					new Thread(new Runnable() {
+					new Thread(() -> {
 
-						@Override
-						public void run() {
-							try {
-								inFileSend.read(dataFile.data);
-								sendMessage(dataFile);
-								sizeOfSend++;
-								if (sizeOfSend == sizeOfData - 1) {
-									int size = sizeFile - sizeOfSend * 1024;
-									dataFile = new DataFile(size);
-								}
-								progressSendFile.setValue((int) (sizeOfSend * 100 / sizeOfData));
-								if (sizeOfSend >= sizeOfData) {
-									inFileSend.close();
-									isSendFile = true;
-									sendMessage(Dictionary.FILE_DATA_CLOSE);
-									progressSendFile.setVisible(false);
-									textState.setVisible(false);
-									isSendFile = false;
-									txtPath.setText("");
-									btnChoose.setEnabled(true);
-									updateChat_notify("File sent complete");
-									inFileSend.close();
-								}
-								continueSendFile = true;
-							} catch (Exception e) {
-								e.printStackTrace();
+						try {
+							inFileSend.read(dataFile.data);
+							sendMessage(dataFile);
+							sizeOfSend++;
+							if (sizeOfSend == sizeOfData - 1) {
+								int size = sizeFile - sizeOfSend * 1024;
+								dataFile = new DataFile(size);
 							}
+							progressSendFile.setValue((int) (sizeOfSend * 100 / sizeOfData));
+							if (sizeOfSend >= sizeOfData) {
+								inFileSend.close();
+								isSendFile = true;
+								sendMessage(Dictionary.FILE_DATA_CLOSE);
+								progressSendFile.setVisible(false);
+								textState.setVisible(false);
+								isSendFile = false;
+								txtPath.setText("");
+								btnChoose.setEnabled(true);
+								updateChatNotify("Completed!");
+								inFileSend.close();
+							}
+							continueSendFile = true;
+						} catch (Exception e) {
+							e.printStackTrace();
 						}
+
 					}).start();
 				}
 			} while (sizeOfSend < sizeOfData);
@@ -576,9 +611,9 @@ public class ChatUserGui {
 						try {
 							file.createNewFile();
 							Thread.sleep(1000);
-							InputStream input = new FileInputStream(URL_DIR + TEMP + nameFileReceive);
+							InputStream input = new FileInputStream(URL + TEMP + nameFileReceive);
 							OutputStream output = new FileOutputStream(file.getAbsolutePath());
-							copyFileReceive(input, output, URL_DIR + TEMP + nameFileReceive);
+							copyFileReceive(input, output, URL + TEMP + nameFileReceive);
 						} catch (Exception e) {
 							Dictionary.show(frameChatGui, "Your file receive has error!!!", false);
 						}
@@ -621,27 +656,4 @@ public class ChatUserGui {
 		}
 	}
 
-	public void copyFileReceive(InputStream inputStr, OutputStream outputStr, String path) throws IOException {
-		byte[] buffer = new byte[1024];
-		int lenght;
-		while ((lenght = inputStr.read(buffer)) > 0) {
-			outputStr.write(buffer, 0, lenght);
-		}
-		inputStr.close();
-		outputStr.close();
-		File fileTemp = new File(path);
-		if (fileTemp.exists()) {
-			fileTemp.delete();
-		}
-	}
-
-	// send html to pane
-	private void appendToPane(JTextPane tp, String message) throws BadLocationException, IOException {
-		HTMLDocument doc = (HTMLDocument) tp.getDocument();
-		HTMLEditorKit editorKit = (HTMLEditorKit) tp.getEditorKit();
-
-		editorKit.insertHTML(doc, doc.getLength(), message, 0, 0, null);
-		tp.setCaretPosition(doc.getLength());
-
-	}
 }
