@@ -179,8 +179,13 @@ public class ServerChatGui {
 		return lblUserOnline.getText();
 	}
 
-	public static void updateMessage(String msg) {
-		txtMessage.append(msg + "\n");
+	public static void updateMessage(String message) {
+		if (!message.equals("Server Starting....!") && !message.equals("Stop Server!")) {
+			txtMessage.append("______________________________________________" + "\n");
+		} else {
+			txtMessage.append(message + "\n");
+		}
+
 	}
 
 	public static void updateNumberOnlineClient() {
