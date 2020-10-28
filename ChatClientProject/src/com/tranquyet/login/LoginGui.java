@@ -55,6 +55,9 @@ public class LoginGui {
 		initialize();
 	}
 
+	/**
+	 * @wbp.parser.entryPoint
+	 */
 	private void initialize() {
 		frameLogin = new JFrame();
 		frameLogin.getContentPane().setBackground(SystemColor.scrollbar);

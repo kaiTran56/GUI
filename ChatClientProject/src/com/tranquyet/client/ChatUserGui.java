@@ -43,9 +43,6 @@ import com.tranquyet.dictionary.Encryption;
 
 public class ChatUserGui {
 
-	private static String URL = System.getProperty("user.dir");
-	private static String TEMP = "/temp/";
-
 	private ChatRoom chat;
 	private Socket socketChat;
 	private String nameUser = "";
@@ -63,6 +60,9 @@ public class ChatUserGui {
 	private int portServer = 0;
 	private JTextField txtMessage;
 	private JScrollPane scrollPane;
+
+	private static String URL = System.getProperty("user.dir");
+	private static String TEMP = "/temp/";
 
 	public ChatUserGui(String user, String guest, Socket socket, int port) {
 		nameUser = user;
@@ -111,9 +111,6 @@ public class ChatUserGui {
 		chat.start();
 	}
 
-	/**
-	 * @wbp.parser.entryPoint
-	 */
 	public void updateChatReceive(String message) throws BadLocationException, IOException {
 		appendToPane(txtDisplayChat,
 				"<div class='left' style='width: 40%; background-color: #f1f0f0;'>" + message + "</div>");
@@ -126,9 +123,6 @@ public class ChatUserGui {
 						+ message + "</td> </tr>" + "</table>");
 	}
 
-	/**
-	 * @wbp.parser.entryPoint
-	 */
 	public void updateChatNotify(String message) throws BadLocationException, IOException {
 		appendToPane(txtDisplayChat,
 				"<table class='bang' style='color: white; clear:both; width: 100%;'>" + "<tr align='right'>"
@@ -141,6 +135,7 @@ public class ChatUserGui {
 				+ "<td style='width: 59%;'></td>" + "<td style='width: 40%;'>" + message + "</td> </tr>" + "</table>");
 	}
 
+	
 	/**
 	 * @wbp.parser.entryPoint
 	 */
@@ -168,7 +163,7 @@ public class ChatUserGui {
 		textName.setForeground(SystemColor.textHighlight);
 		textName.setFont(new Font("MS PGothic", Font.BOLD | Font.ITALIC, 16));
 		textName.setEditable(false);
-		textName.setBounds(70, 11, 77, 28);
+		textName.setBounds(70, 11, 100, 28);
 		frameChatGui.getContentPane().add(textName);
 		textName.setText(nameGuest);
 		textName.setColumns(10);
@@ -503,8 +498,7 @@ public class ChatUserGui {
 							lblReceive.setVisible(true);
 							out = new FileOutputStream(URL + TEMP + nameFileReceive);
 						} else if (messageObj.equals(Dictionary.FILE_DATA_CLOSE)) {
-							updateChatReceive(
-									"Receive file: " + nameFileReceive + " with size " + sizeReceive + " KB");
+							updateChatReceive("Receive file: " + nameFileReceive + " with size " + sizeReceive + " KB");
 							sizeReceive = 0;
 							out.flush();
 							out.close();

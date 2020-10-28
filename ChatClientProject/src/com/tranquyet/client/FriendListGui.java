@@ -148,8 +148,10 @@ public class FriendListGui {
 					try {
 						clientNode.exit();
 						frameFriendTable.dispose();
+						System.exit(0);
 					} catch (Exception e) {
 						frameFriendTable.dispose();
+						System.exit(0);
 					}
 				}
 			}
@@ -187,7 +189,7 @@ public class FriendListGui {
 		lblUsername = new JLabel(nameUser);
 		lblUsername.setForeground(Color.RED);
 		lblUsername.setFont(new Font("Segoe UI", Font.PLAIN, 15));
-		lblUsername.setBounds(85, 70, 94, 28);
+		lblUsername.setBounds(87, 72, 165, 40);
 		frameFriendTable.getContentPane().add(lblUsername);
 
 	}
