@@ -19,6 +19,7 @@ public class ServerCode {
 	private ObjectInputStream obInputStream;
 	private boolean isStop = false;
 	private boolean isExit = false;
+	private String msg;
 
 	public ArrayList<User> getUserData() {
 		return userData;
@@ -51,24 +52,24 @@ public class ServerCode {
 	}
 
 	private String sendSessionAccept() throws Exception {
-		String msg = Dictionary.SESSION_ACCEPT_OPEN;
-		int size = userData.size();
-		for (int i = 0; i < size; i++) {
-			User peer = userData.get(i);
+
+		msg = Dictionary.SESSION_ACCEPT_OPEN;
+		this.userData.stream().forEach(p -> {
 			msg += Dictionary.PEER_OPEN;
 			msg += Dictionary.PEER_NAME_OPEN;
-			msg += peer.getName();
+			msg += p.getName();
 			msg += Dictionary.PEER_NAME_CLOSE;
 			msg += Dictionary.IP_OPEN;
-			msg += peer.getHost();
+			msg += p.getHost();
 			msg += Dictionary.IP_CLOSE;
 			msg += Dictionary.PORT_OPEN;
-			msg += peer.getPort();
+			msg += p.getPort();
 			msg += Dictionary.PORT_CLOSE;
 			msg += Dictionary.PEER_CLOSE;
-		}
+		});
 		msg += Dictionary.SESSION_ACCEPT_CLOSE;
 		return msg;
+
 	}
 
 	public void stopserver() throws Exception {
@@ -87,7 +88,7 @@ public class ServerCode {
 			if (!isExsistName(getData.get(0))) {
 				saveNewPeer(getData.get(0), connection.getInetAddress().toString(), Integer.parseInt(getData.get(1)));
 				ServerChatGui.updateMessage(getData.get(0));
-				ServerChatGui.updateNumberOnlineClient();
+				ServerChatGui.updateNumber();
 			} else
 				return false;
 		} else {
@@ -96,7 +97,7 @@ public class ServerCode {
 			Decryption.updatePeerOnline(userData, msg);
 			if (size != userData.size()) {
 				isExit = true;
-				ServerChatGui.decreaseNumberOnlineClient();
+				ServerChatGui.decreaseNumber();
 			}
 		}
 		return true;

@@ -42,6 +42,9 @@ public class ServerChatGui {
 		initialize();
 	}
 
+	/**
+	 * @wbp.parser.entryPoint
+	 */
 	private void initialize() {
 		frameServer = new JFrame();
 		frameServer.getContentPane().setBackground(Color.LIGHT_GRAY);
@@ -175,8 +178,15 @@ public class ServerChatGui {
 	 * 
 	 */
 
-	public static String getNumberUserOnline() {
-		return lblUserOnline.getText();
+	public static void updateNumber() {
+		int number = Integer.parseInt(lblUserOnline.getText());
+		lblUserOnline.setText(Integer.toString(number + 1));
+	}
+
+	public static void decreaseNumber() {
+		int number = Integer.parseInt(lblUserOnline.getText());
+		lblUserOnline.setText(Integer.toString(number - 1));
+
 	}
 
 	public static void updateMessage(String message) {
@@ -187,20 +197,14 @@ public class ServerChatGui {
 		}
 
 	}
-
-	public static void updateNumberOnlineClient() {
-		int number = Integer.parseInt(lblUserOnline.getText());
-		lblUserOnline.setText(Integer.toString(number + 1));
+	public static String getNumberUserOnline() {
+		return lblUserOnline.getText();
 	}
-
-	public static void decreaseNumberOnlineClient() {
-		int number = Integer.parseInt(lblUserOnline.getText());
-		lblUserOnline.setText(Integer.toString(number - 1));
-
-	}
+	
 	/*
 	 * </Functions>
 	 * 
 	 */
+
 
 }
